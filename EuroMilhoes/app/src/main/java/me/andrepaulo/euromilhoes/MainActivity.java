@@ -4,14 +4,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText n1, n2, n3, n4, n5, e1, e2;
-    private int minNumero = 1, maxNumero = 6, minEstrela = 1, maxEstrela = 9;
+    TextView euroNumeros, euroEstrelas;
+    private int minNumero = 1, maxNumero = 50, minEstrela = 1, maxEstrela = 9;
     private int[] numerosuser = new int[5];
     private int[] estrelasuser = new int[2];
     private int[] numerosGerados = new int[5];
@@ -27,34 +31,59 @@ public class MainActivity extends AppCompatActivity {
         n5 = (EditText) findViewById(R.id.n5);
         e1 = (EditText) findViewById(R.id.e1);
         e2 = (EditText) findViewById(R.id.e2);
+        euroNumeros = (TextView) findViewById(R.id.euromilhoesNumeros);
+        euroEstrelas = (TextView) findViewById(R.id.euromilhoesEstrelas);
     }
 
     public void btGerarChave(View view) {
-        /*if(verificarPreenchidos()){
-            numerosusertoArray();
-            gerarEuromilhoes();
+        limpaArrays();
+        if(verificarPreenchidos()){
+            if(!numerosusertoArray()){
+                gerarEuromilhoes();
+                euroNumeros.setText(arrayToString(numerosGerados));
+                euroEstrelas.setText(arrayToString(estrelasGerados));
+
+            } else {
+                Toast.makeText(this, "Erro! Existe um número repetido. Por favor verifique!", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "Preencha todos os campos com os números obrigatórios!", Toast.LENGTH_SHORT).show();
-        }*/
-        System.out.println("TESTE");
-        gerarEuromilhoes();
-        System.out.println("TESTE");
-        System.out.println(numerosGerados);
+        }
 
 
     }
 
-    private void numerosusertoArray(){
-        numerosuser[0] = getNum(n1);
-        numerosuser[1] = getNum(n2);
-        numerosuser[2] = getNum(n3);
-        numerosuser[3] = getNum(n4);
-        numerosuser[4] = getNum(n5);
-        estrelasuser[0] = getNum(e1);
-        estrelasuser[1] = getNum(e2);
+    private boolean numerosusertoArray(){
+        int n_1 = getNum(n1), n_2 = getNum(n2), n_3 = getNum(n3), n_4 = getNum(n4), n_5 = getNum(n5);
+        int e_1 = getNum(e1), e_2 = getNum(e2);
+        boolean erro = false;
+        numerosuser[0] = n_1;
+        if(!verificaExiste(n_2, numerosuser))
+            numerosuser[1] = n_2;
+        else
+            erro = true;
+        if(!verificaExiste(n_3, numerosuser))
+            numerosuser[2] = n_3;
+        else
+            erro = true;
+        if(!verificaExiste(n_4, numerosuser))
+            numerosuser[3] = n_4;
+        else
+            erro = true;
+        if(!verificaExiste(n_5, numerosuser))
+            numerosuser[4] = n_5;
+        else
+            erro = true;
+        if(!verificaExiste(e_1, estrelasuser))
+            estrelasuser[0] = e_1;
+        else
+            erro = true;
+        if(!verificaExiste(e_2, estrelasuser))
+            estrelasuser[1] = e_2;
+        else
+            erro = true;
+        return erro;
     }
-
-    //private boolean checkNumerosRepetidos()
 
     private void gerarEuromilhoes(){
         int numeroGerado = 0;
@@ -100,5 +129,28 @@ public class MainActivity extends AppCompatActivity {
         } else {
             return Integer.parseInt(ab.getText().toString());
         }
+    }
+
+    private void limpaArrays(){
+        for (int i = 0; i < numerosGerados.length; i++) {
+            numerosGerados[i] = 0;
+        }
+        for (int i = 0; i < estrelasGerados.length; i++) {
+            estrelasGerados[i] = 0;
+        }
+        for (int i = 0; i < numerosuser.length; i++) {
+            numerosuser[i] = 0;
+        }
+        for (int i = 0; i < estrelasuser.length; i++) {
+            estrelasuser[i] = 0;
+        }
+    }
+
+    private String arrayToString(int[] t){
+        String temp = "";
+        for (int i = 0; i < t.length; i++) {
+            temp += t[i] + " ";
+        }
+        return temp;
     }
 }
