@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">EuroMilhoes</string>
+    <string name="insirachave">Insira a sua chave:</string>
+    <string name="btgerar">Gerar Chave</string>
+</resources>

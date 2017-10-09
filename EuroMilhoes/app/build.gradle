@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
     defaultConfig {
-        applicationId "me.andrepaulo.ficha2_guessnumber"
+        applicationId "me.andrepaulo.euromilhoes"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -15,9 +15,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            debuggable true
         }
     }
 }

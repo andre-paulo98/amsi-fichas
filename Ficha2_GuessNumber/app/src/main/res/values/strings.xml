@@ -3,7 +3,7 @@
     <string name="btnAdivinha">Adivinha</string>
     <string name="maiscima">O valor está mais acima!</string>
     <string name="maisbaixo">O valor está mais a baixo!</string>
-    <string name="numtentativas">Número de tentativas: </string>
+    <string name="numtentativas">Número de tentativas restantes: </string>
     <string name="numtentativasout">Excedeu o número de tentativas.</string>
-    <string name="acertou">Acertou!.</string>
+    <string name="acertou">Acertou. Pode recomeçar!</string>
 </resources>
