@@ -104,13 +104,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="71dp"
+        android:layout_marginTop="79dp"
         android:onClick="btGerarChave"
         android:text="@string/btgerar"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/n3"
-        app:layout_constraintHorizontal_bias="0.501" />
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/euromilhoesNumeros"
@@ -133,4 +133,26 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/euromilhoesNumeros" />
+
+    <TextView
+        android:id="@+id/euroResultado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/euromilhoesEstrelas" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="61dp"
+        android:layout_height="45dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="15dp"
+        android:onClick="reset"
+        android:text="🗑"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/e2" />
 </android.support.constraint.ConstraintLayout>

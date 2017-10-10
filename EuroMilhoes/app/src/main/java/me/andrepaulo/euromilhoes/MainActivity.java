@@ -2,19 +2,19 @@ package me.andrepaulo.euromilhoes;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
+import java.util.Arrays;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText n1, n2, n3, n4, n5, e1, e2;
-    TextView euroNumeros, euroEstrelas;
+    TextView euroNumeros, euroEstrelas, euroResultados;
     private int minNumero = 1, maxNumero = 50, minEstrela = 1, maxEstrela = 9;
     private int[] numerosuser = new int[5];
     private int[] estrelasuser = new int[2];
@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         e2 = (EditText) findViewById(R.id.e2);
         euroNumeros = (TextView) findViewById(R.id.euromilhoesNumeros);
         euroEstrelas = (TextView) findViewById(R.id.euromilhoesEstrelas);
+        euroResultados = (TextView) findViewById(R.id.euroResultado);
     }
 
     public void btGerarChave(View view) {
@@ -40,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
         if(verificarPreenchidos()){
             if(!numerosusertoArray()){
                 gerarEuromilhoes();
-                euroNumeros.setText(arrayToString(numerosGerados));
-                euroEstrelas.setText(arrayToString(estrelasGerados));
+                Arrays.sort(numerosGerados);
+                Arrays.sort(estrelasGerados);
+                mostraResultados();
 
             } else {
                 Toast.makeText(this, "Erro! Existe um número repetido. Por favor verifique!", Toast.LENGTH_SHORT).show();
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void gerarEuromilhoes(){
-        int numeroGerado = 0;
+        int numeroGerado = 0, estrelaGerada = 0;
         for (int i = 0; i < 5; i++) {
             do{
                 numeroGerado = numeroAleatorio(minNumero, maxNumero);
@@ -94,7 +96,10 @@ public class MainActivity extends AppCompatActivity {
             numerosGerados[i] = numeroGerado;
         }
         for (int i = 0 ; i < 2; i++) {
-            estrelasGerados[i] = numeroAleatorio(minNumero, maxEstrela);
+            do{
+                estrelaGerada = numeroAleatorio(minEstrela, maxEstrela);
+            } while (verificaExiste(estrelaGerada, estrelasGerados));
+            estrelasGerados[i] = estrelaGerada;
         }
     }
 
@@ -132,25 +137,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void limpaArrays(){
-        for (int i = 0; i < numerosGerados.length; i++) {
-            numerosGerados[i] = 0;
-        }
-        for (int i = 0; i < estrelasGerados.length; i++) {
-            estrelasGerados[i] = 0;
-        }
-        for (int i = 0; i < numerosuser.length; i++) {
-            numerosuser[i] = 0;
-        }
-        for (int i = 0; i < estrelasuser.length; i++) {
-            estrelasuser[i] = 0;
+        limpaArray(numerosGerados);
+        limpaArray(estrelasGerados);
+        limpaArray(numerosuser);
+        limpaArray(estrelasuser);
+    }
+
+    private void limpaArray(int[] arr){
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = 0;
         }
     }
 
-    private String arrayToString(int[] t){
-        String temp = "";
-        for (int i = 0; i < t.length; i++) {
-            temp += t[i] + " ";
+    private void mostraResultados(){
+        String numeros = "", estrelas = "";
+        int numcertos = 0, estrelacertas = 0;
+        for (int i = 0; i < numerosGerados.length; i++) {
+            if(verificaExiste(numerosGerados[i], numerosuser)){
+                numeros += "<font color=#397700>"+numerosGerados[i]+"</font> ";
+                numcertos++;
+            } else {
+                numeros += "<font color=#FF0000>"+numerosGerados[i]+"</font> ";
+            }
         }
-        return temp;
+        for (int i = 0; i < estrelasGerados.length; i++) {
+            if(verificaExiste(estrelasGerados[i], estrelasuser)){
+                estrelas += "<font color=#397700>"+estrelasGerados[i]+"</font> ";
+                estrelacertas++;
+            } else {
+                estrelas += "<font color=#FF0000>"+estrelasGerados[i]+"</font> ";
+            }
+        }
+        euroNumeros.setText(Html.fromHtml(numeros));
+        euroEstrelas.setText(Html.fromHtml(estrelas));
+        euroResultados.setText("Números certos: "+numcertos + ". Estrelas certas: "+estrelacertas + ".");
+    }
+
+    public void reset(View view) {
+        n1.setText("");
+        n2.setText("");
+        n3.setText("");
+        n4.setText("");
+        n5.setText("");
+        e1.setText("");
+        e2.setText("");
+        limpaArrays();
+        euroEstrelas.setText("");
+        euroResultados.setText("");
+        euroNumeros.setText("");
     }
 }
