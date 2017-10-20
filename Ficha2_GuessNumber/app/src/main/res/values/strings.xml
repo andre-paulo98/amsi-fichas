@@ -6,4 +6,5 @@
     <string name="numtentativas">Número de tentativas restantes: </string>
     <string name="numtentativasout">Excedeu o número de tentativas.</string>
     <string name="acertou">Acertou. Pode recomeçar!</string>
+    <string name="title_activity_sobre">SobreActivity</string>
 </resources>

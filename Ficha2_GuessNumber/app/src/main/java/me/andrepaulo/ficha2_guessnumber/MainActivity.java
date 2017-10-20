@@ -1,5 +1,6 @@
 package me.andrepaulo.ficha2_guessnumber;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvresultado, tvtentantivas;
     private int numeroAleatorio;
     private int guess, tentativas;
+    public int qtCerto = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 if(numeroAleatorio == guess){
                     tvresultado.setText(R.string.acertou);
                     tvtentantivas.setText(getString(R.string.numtentativas) + tentativas);
+                    qtCerto++;
                     mostraResultado();
                     novoNumbero();
                 } else if (numeroAleatorio > guess){
@@ -77,5 +80,11 @@ public class MainActivity extends AppCompatActivity {
         int randomNum = rand.nextInt((max - min) + 1) + min;
 
         return randomNum;
+    }
+
+    public void onClickSobre(View view) {
+        Intent intent = new Intent(this, SobreActivit.class);
+        intent.putExtra(SobreActivit.RESULTADO, qtCerto);
+        startActivity(intent);
     }
 }
