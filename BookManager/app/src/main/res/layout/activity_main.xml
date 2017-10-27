@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/gray"
+    tools:context="me.andrepaulo.bookmanager.MainActivity">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bem-Vindo"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2160446@my.ipleiria.pt"
+        android:textAlignment="center"
+        android:textColor="@android:color/black" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+
+    <Button
+        android:id="@+id/bt_livro_estatico"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:onClick="detalhesLivroEstatico"
+        android:text="Ver detalhes livro (estático)" />
+
+    <Button
+        android:id="@+id/bt_livro_dinamico"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:onClick="detalhesLivroDinamico"
+        android:text="Ver detalhes livro (dinamico)" />
+
+    <Button
+        android:id="@+id/bt_envia_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:onClick="enviaMail"
+        android:text="Enviar email" />
+</LinearLayout>
