@@ -14,6 +14,10 @@
         completions."
     </string>
     <string name="activity_detalheslivro_titulo">Detalhes {livro}</string>
+    <string name="pesquisa">Pesquisa</string>
+    <string name="grelha">Grelha</string>
+    <string name="email">Email</string>
+    <string name="lista_livros">Lista Livros</string>
     <color name="gray">#aaaaaa</color>
 
 

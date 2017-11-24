@@ -3,6 +3,9 @@ package me.andrepaulo.bookmanager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -19,6 +22,8 @@ import me.andrepaulo.bookmanager.modelo.GestorLivros;
 
 public class ActivityDadosDinamicos extends AppCompatActivity {
 
+    private String mEmail;
+
     private ListView listaLivros;
     private ListaLivrosAdapter listaLivrosAdapter;
     private ArrayList<Livro> livros;
@@ -27,6 +32,8 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dados_dinamicos);
+
+        mEmail = getIntent().getStringExtra(LoginActivity.DADOS_EMAIL);
 
         GestorLivros gestor = new GestorLivros();
 
@@ -46,5 +53,23 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            //case R.id
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_lista_livros, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void onClickAdicionarLivro(View view) {
     }
 }
