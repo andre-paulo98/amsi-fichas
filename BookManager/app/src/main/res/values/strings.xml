@@ -13,7 +13,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <color name="gray">#AAAAAA</color>
+    <string name="activity_detalheslivro_titulo">Detalhes {livro}</string>
+    <color name="gray">#aaaaaa</color>
 
 
 </resources>

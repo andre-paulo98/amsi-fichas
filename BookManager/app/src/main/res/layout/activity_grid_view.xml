@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="me.andrepaulo.bookmanager.ActivityDadosDinamicos">
+    tools:context="me.andrepaulo.bookmanager.GridViewActivity">
 
-    <ListView
-        android:id="@+id/listaLivros"
+    <GridView
+        android:id="@+id/gv_grelhaLivros"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:numColumns="auto_fit" />
 </LinearLayout>
