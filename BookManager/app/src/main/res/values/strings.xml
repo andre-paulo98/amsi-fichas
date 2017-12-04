@@ -18,6 +18,8 @@
     <string name="grelha">Grelha</string>
     <string name="email">Email</string>
     <string name="lista_livros">Lista Livros</string>
+    <string name="adicionarnovolivro">Adicionar novo livro</string>
+    <string name="detalhes">Detalhes \"</string>
     <color name="gray">#aaaaaa</color>
 
 

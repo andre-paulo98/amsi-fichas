@@ -46,17 +46,24 @@ public class SingletonLivros {
 
 
     public void removerLivro(int posicao){
-        livros.remove(posicao);
+        if(livros.get(posicao) != null)
+            livros.remove(posicao);
     }
 
     public void editarLivro(Livro livro){
         if(livros.contains(livro)){
-
+            int posicao = pesquisarLivro(livro.getId());
+            Livro tLivro = livros.get(posicao);
+            tLivro.setTitulo(livro.getTitulo());
+            tLivro.setAutor(livro.getAutor());
+            tLivro.setAno(livro.getAno());
+            tLivro.setSerie(livro.getSerie());
         }
     }
 
-    public int pesquisarLivro(int idLivro){
+    public int pesquisarLivro(long idLivro){
         for (int i = 0; i < livros.size(); i++) {
+            System.out.println("A verificar a posição "+i+ " o livro é "+ livros.get(i).getId() + " e verificar se é igual a"+idLivro );
             if(livros.get(i).getId() == idLivro)
                 return i;
         }

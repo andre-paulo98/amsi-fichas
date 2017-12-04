@@ -45,7 +45,8 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DetalheLivro.class);
-                intent.putExtra(DetalheLivro.LIVRO_SELECIONADO, position);
+                Livro tempLivro = livros.get(position);
+                intent.putExtra(DetalheLivro.LIVRO_SELECIONADO, tempLivro.getId());
                 startActivity(intent);
             }
         });
@@ -82,7 +83,7 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                ArrayList<Livro> tempLivros = new ArrayList<Livro>();
+                final ArrayList<Livro> tempLivros = new ArrayList<Livro>();
                 for (Livro temp : livros){
                     if(temp.getTitulo().toLowerCase().contains(newText.toString()))
                         tempLivros.add(temp);
@@ -92,9 +93,12 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
                 listaLivros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Livro tempLivro = tempLivros.get(position);
+
                         Intent intent = new Intent(getApplicationContext(), DetalheLivro.class);
-                        intent.putExtra(DetalheLivro.LIVRO_SELECIONADO, position);
+                        intent.putExtra(DetalheLivro.LIVRO_SELECIONADO, tempLivro.getId());
                         startActivity(intent);
+                        startActivityForResult(intent, DetalheLivro.REQUEST_EDIT);
                     }
                 });
                 return false;
@@ -105,5 +109,16 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
     }
 
     public void onClickAdicionarLivro(View view) {
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        if (requestCode == DetalheLivro.REQUEST_EDIT){
+            if(resultCode == RESULT_OK){
+                Toast.makeText(this, "Livro editado com sucesso", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
