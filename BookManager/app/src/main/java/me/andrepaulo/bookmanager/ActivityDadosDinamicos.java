@@ -1,24 +1,23 @@
 package me.andrepaulo.bookmanager;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import me.andrepaulo.bookmanager.modelo.ListaLivrosAdapter;
 import me.andrepaulo.bookmanager.modelo.Livro;
-
-import me.andrepaulo.bookmanager.modelo.GestorLivros;
+import me.andrepaulo.bookmanager.modelo.SingletonLivros;
 
 public class ActivityDadosDinamicos extends AppCompatActivity {
 
@@ -35,9 +34,7 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
 
         mEmail = getIntent().getStringExtra(LoginActivity.DADOS_EMAIL);
 
-        GestorLivros gestor = new GestorLivros();
-
-        livros = new ArrayList(gestor.gerarListaLivrosFake());
+        livros = SingletonLivros.getInstance().getLivros();
 
         listaLivrosAdapter = new ListaLivrosAdapter(this, livros);
 
@@ -58,7 +55,14 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            //case R.id
+            case R.id.itemGrelha:
+                Toast.makeText(this, "Item Grelha", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, GridViewActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.itemEmail:
+                Toast.makeText(this, "Email", Toast.LENGTH_SHORT).show();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -67,6 +71,36 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_lista_livros, menu);
+
+        MenuItem itemPesquisa =  menu.findItem(R.id.itemPesquisa);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(itemPesquisa);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ArrayList<Livro> tempLivros = new ArrayList<Livro>();
+                for (Livro temp : livros){
+                    if(temp.getTitulo().toLowerCase().contains(newText.toString()))
+                        tempLivros.add(temp);
+                }
+
+                listaLivros.setAdapter(new ListaLivrosAdapter(getApplicationContext(), tempLivros));
+                listaLivros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(getApplicationContext(), DetalheLivro.class);
+                        intent.putExtra(DetalheLivro.LIVRO_SELECIONADO, position);
+                        startActivity(intent);
+                    }
+                });
+                return false;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -1,15 +1,14 @@
 package me.andrepaulo.bookmanager;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
-import me.andrepaulo.bookmanager.modelo.GestorLivros;
 import me.andrepaulo.bookmanager.modelo.Livro;
+import me.andrepaulo.bookmanager.modelo.SingletonLivros;
 
 
 public class DetalheLivro extends AppCompatActivity {
@@ -28,8 +27,7 @@ public class DetalheLivro extends AppCompatActivity {
         tx_ano = (EditText) findViewById(R.id.editAno);
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
 
-        GestorLivros gestor = new GestorLivros();
-        ArrayList<Livro> livros = new ArrayList(gestor.gerarListaLivrosFake());
+        ArrayList<Livro> livros = SingletonLivros.getInstance().getLivros();
         Livro livroSelecionado = livros.get(posicaoLivro);
         tx_titulo.setText(livroSelecionado.getTitulo());
         tx_serie.setText(livroSelecionado.getSerie());

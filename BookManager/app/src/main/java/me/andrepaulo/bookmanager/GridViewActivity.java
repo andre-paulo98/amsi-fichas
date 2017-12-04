@@ -1,20 +1,19 @@
 package me.andrepaulo.bookmanager;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import me.andrepaulo.bookmanager.modelo.GestorLivros;
 import me.andrepaulo.bookmanager.modelo.GrelhaLivrosAdapter;
 import me.andrepaulo.bookmanager.modelo.Livro;
+import me.andrepaulo.bookmanager.modelo.SingletonLivros;
 
 public class GridViewActivity extends AppCompatActivity {
 
@@ -27,9 +26,7 @@ public class GridViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grid_view);
 
-        GestorLivros gestor = new GestorLivros();
-
-        livros = new ArrayList(gestor.gerarListaLivrosFake());
+        livros = SingletonLivros.getInstance().getLivros();
 
         grelhaLivrosAdapter = new GrelhaLivrosAdapter(this, livros);
 

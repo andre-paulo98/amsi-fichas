@@ -1,25 +1,35 @@
 package me.andrepaulo.bookmanager.modelo;
 
-import me.andrepaulo.bookmanager.R;
-
 /**
  * Created by andre on 27/10/2017.
  */
 
 public class Livro {
 
+    private long id;
     private String titulo;
     private String serie;
     private String autor;
     private int ano;
     private int capa;
 
+    private static long autoIncrementId = 1;
+
     public Livro(String titulo, String serie, String autor, int ano, int capa) {
+        this.id = autoIncrementId++;
         this.titulo = titulo;
         this.serie = serie;
         this.autor = autor;
         this.ano = ano;
         this.capa = capa;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitulo() {
