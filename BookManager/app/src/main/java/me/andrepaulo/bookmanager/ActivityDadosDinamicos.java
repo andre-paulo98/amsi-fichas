@@ -27,6 +27,7 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
     private ListaLivrosAdapter listaLivrosAdapter;
     private ArrayList<Livro> livros;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +35,7 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
 
         mEmail = getIntent().getStringExtra(LoginActivity.DADOS_EMAIL);
 
-        livros = SingletonLivros.getInstance().getLivros();
+        livros = SingletonLivros.getInstance(getApplicationContext()).getLivros();
 
         listaLivrosAdapter = new ListaLivrosAdapter(this, livros);
 
@@ -120,5 +121,14 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
                 Toast.makeText(this, "Livro editado com sucesso", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        livros.clear();
+        livros = SingletonLivros.getInstance(this).getLivros();
+        listaLivrosAdapter.refresh(livros);
+
     }
 }

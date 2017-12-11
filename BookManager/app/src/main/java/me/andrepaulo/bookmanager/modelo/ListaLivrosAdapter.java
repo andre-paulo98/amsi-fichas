@@ -60,4 +60,9 @@ public class ListaLivrosAdapter extends BaseAdapter{
 
         return convertView;
     }
+
+    public void refresh(ArrayList<Livro> livros){
+        this.listaLivros = livros;
+        notifyDataSetChanged();
+    }
 }

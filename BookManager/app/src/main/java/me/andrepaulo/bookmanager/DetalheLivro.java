@@ -36,11 +36,11 @@ public class DetalheLivro extends AppCompatActivity {
         tx_ano = (EditText) findViewById(R.id.editAno);
         fab = (FloatingActionButton) findViewById(R.id.fabDetalheLivro);
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-        livros = SingletonLivros.getInstance().getLivros();
+        livros = SingletonLivros.getInstance(getApplicationContext()).getLivros();
 
         if(idLivro > -1){
             fab.setImageResource(R.drawable.ic_actions_save);
-            posicao = SingletonLivros.getInstance().pesquisarLivro(idLivro);
+            posicao = SingletonLivros.getInstance(getApplicationContext()).pesquisarLivro(idLivro);
 
 
             Livro livroSelecionado = livros.get(posicao);
@@ -66,7 +66,7 @@ public class DetalheLivro extends AppCompatActivity {
             tempLivro.setSerie(tx_serie.getText().toString());
             tempLivro.setAutor(tx_autor.getText().toString());
             tempLivro.setAno(Integer.parseInt(tx_ano.getText().toString()));
-            SingletonLivros.getInstance().editarLivro(tempLivro);
+            SingletonLivros.getInstance(getApplicationContext()).editarLivro(tempLivro);
             setResult(RESULT_OK);
             finish();
         }

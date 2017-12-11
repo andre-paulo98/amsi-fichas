@@ -1,5 +1,7 @@
 package me.andrepaulo.bookmanager.modelo;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 import me.andrepaulo.bookmanager.R;
@@ -10,23 +12,25 @@ import me.andrepaulo.bookmanager.R;
 
 public class SingletonLivros {
     private static SingletonLivros INSTANCE = null;
+    private LivroBDHelper livroBDHelper;
 
     private ArrayList<Livro> livros;
 
-    public static synchronized SingletonLivros getInstance() {
+    public static synchronized SingletonLivros getInstance(Context context) {
         if(INSTANCE == null){
-            INSTANCE = new SingletonLivros();
+            INSTANCE = new SingletonLivros(context);
         }
         return INSTANCE;
     }
 
-    private SingletonLivros() {
+    private SingletonLivros(Context context) {
         this.livros = new ArrayList<>();
+        this.livroBDHelper = new LivroBDHelper(context);
         gerarFakeData();
     }
 
     public ArrayList<Livro> getLivros(){
-        return livros;
+        return livros = livroBDHelper.getAllLivros();
     }
 
     private void gerarFakeData(){
@@ -41,13 +45,24 @@ public class SingletonLivros {
     }
 
     public void adicionar(Livro livro){
-        this.livros.add(livro);
+        Livro tempLivro = livroBDHelper.adicionarLivroBD(livro);
+        if(tempLivro != null){
+            this.livros.add(livro);
+        } else {
+            System.out.println(">>> [ERRO] O livro com o nome: "+livro.getTitulo() + " não foi adicionado. <<<");
+        }
     }
 
 
     public void removerLivro(int posicao){
-        if(livros.get(posicao) != null)
-            livros.remove(posicao);
+        if(livros.get(posicao) != null){
+            if(livroBDHelper.removerLivroBD(livros.get(posicao).getId())){
+                livros.remove(posicao);
+            } else {
+                System.out.println(">>> [ERRO] o livro não foi removido <<<");
+            }
+
+        }
     }
 
     public void editarLivro(Livro livro){
@@ -58,6 +73,9 @@ public class SingletonLivros {
             tLivro.setAutor(livro.getAutor());
             tLivro.setAno(livro.getAno());
             tLivro.setSerie(livro.getSerie());
+            if(livroBDHelper.atualizarLivroBD(tLivro)){
+                System.out.println("Livro guardado na base de dados com sucesso.");
+            }
         }
     }
 

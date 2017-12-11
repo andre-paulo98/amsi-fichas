@@ -26,7 +26,7 @@ public class GridViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grid_view);
 
-        livros = SingletonLivros.getInstance().getLivros();
+        livros = SingletonLivros.getInstance(getApplicationContext()).getLivros();
 
         grelhaLivrosAdapter = new GrelhaLivrosAdapter(this, livros);
 
