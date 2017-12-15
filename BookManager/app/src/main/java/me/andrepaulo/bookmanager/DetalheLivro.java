@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -36,7 +35,7 @@ public class DetalheLivro extends AppCompatActivity {
         tx_ano = (EditText) findViewById(R.id.editAno);
         fab = (FloatingActionButton) findViewById(R.id.fabDetalheLivro);
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-        livros = SingletonLivros.getInstance(getApplicationContext()).getLivros();
+        livros = SingletonLivros.getInstance(getApplicationContext()).getLivrosBD();
 
         if(idLivro > -1){
             fab.setImageResource(R.drawable.ic_actions_save);
@@ -49,8 +48,13 @@ public class DetalheLivro extends AppCompatActivity {
             tx_autor.setText(livroSelecionado.getAutor());
             tx_ano.setText(livroSelecionado.getAno()+"");
             setTitle(getString(R.string.detalhes)+livroSelecionado.getTitulo()+"\"");
-
-            linearLayout.setBackgroundResource(livroSelecionado.getCapa());
+            /*Glide.with(getApplicationContext())
+                    .load(livroSelecionado.getCapa())
+                    .placeholder(R.drawable.ipl_semfundo)
+                    .thumbnail(0f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(linearLayout);*/
+            //linearLayout.setBackgroundResource(livroSelecionado.getCapa());
         } else {
             setTitle(getString(R.string.adicionarnovolivro));
         }
@@ -66,9 +70,20 @@ public class DetalheLivro extends AppCompatActivity {
             tempLivro.setSerie(tx_serie.getText().toString());
             tempLivro.setAutor(tx_autor.getText().toString());
             tempLivro.setAno(Integer.parseInt(tx_ano.getText().toString()));
-            SingletonLivros.getInstance(getApplicationContext()).editarLivro(tempLivro);
+            SingletonLivros.getInstance(getApplicationContext()).editarLivroBD(tempLivro);
             setResult(RESULT_OK);
             finish();
         }
+    }
+
+    private Livro criarLivro(){
+        String url = "http://amsi201718.ddns.net/img/ipl_semfundo.png";
+        Livro auxLivro = new Livro(0,
+                tx_titulo.getText().toString(),
+                tx_serie.getText().toString(),
+                tx_autor.getText().toString(),
+                Integer.parseInt(tx_ano.getText().toString()),
+                url);
+        return auxLivro;
     }
 }

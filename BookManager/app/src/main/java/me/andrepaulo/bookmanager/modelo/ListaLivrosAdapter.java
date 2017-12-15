@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.util.ArrayList;
 
 import me.andrepaulo.bookmanager.R;
@@ -19,10 +22,12 @@ import me.andrepaulo.bookmanager.R;
 public class ListaLivrosAdapter extends BaseAdapter{
 
     private ArrayList<Livro> listaLivros;
+    private Context context;
     private LayoutInflater inflater;
 
     public ListaLivrosAdapter(Context contexto, ArrayList<Livro> livros) {
         this.listaLivros = livros;
+        this.context = contexto;
         this.inflater = LayoutInflater.from(contexto);
     }
 
@@ -56,7 +61,12 @@ public class ListaLivrosAdapter extends BaseAdapter{
         tv_serie.setText(listaLivros.get(position).getSerie());
         tv_autor.setText(listaLivros.get(position).getAutor());
         tv_ano.setText(listaLivros.get(position).getAno() + "");
-        iv_capa.setImageResource(listaLivros.get(position).getCapa());
+        Glide.with(context)
+                .load(listaLivros.get(position).getCapa())
+                .placeholder(R.drawable.ipl_semfundo)
+                .thumbnail(0f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(iv_capa);
 
         return convertView;
     }

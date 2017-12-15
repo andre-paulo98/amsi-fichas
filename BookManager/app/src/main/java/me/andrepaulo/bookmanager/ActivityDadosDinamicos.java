@@ -35,7 +35,7 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
 
         mEmail = getIntent().getStringExtra(LoginActivity.DADOS_EMAIL);
 
-        livros = SingletonLivros.getInstance(getApplicationContext()).getLivros();
+        livros = SingletonLivros.getInstance(getApplicationContext()).getLivrosBD();
 
         listaLivrosAdapter = new ListaLivrosAdapter(this, livros);
 
@@ -110,6 +110,7 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
     }
 
     public void onClickAdicionarLivro(View view) {
+
     }
 
     @Override
@@ -127,7 +128,7 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         livros.clear();
-        livros = SingletonLivros.getInstance(this).getLivros();
+        livros = SingletonLivros.getInstance(this).getLivrosBD();
         listaLivrosAdapter.refresh(livros);
 
     }

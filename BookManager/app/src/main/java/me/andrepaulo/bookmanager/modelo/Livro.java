@@ -11,12 +11,10 @@ public class Livro {
     private String serie;
     private String autor;
     private int ano;
-    private int capa;
+    private String capa;
 
-    private static long autoIncrementId = 1;
-
-    public Livro(String titulo, String serie, String autor, int ano, int capa) {
-        this.id = autoIncrementId++;
+    public Livro(long id, String titulo, String serie, String autor, int ano, String capa) {
+        this.id = id;
         this.titulo = titulo;
         this.serie = serie;
         this.autor = autor;
@@ -64,11 +62,11 @@ public class Livro {
         this.ano = ano;
     }
 
-    public int getCapa() {
+    public String getCapa() {
         return capa;
     }
 
-    public void setCapa(int capa) {
+    public void setCapa(String capa) {
         this.capa = capa;
     }
 }

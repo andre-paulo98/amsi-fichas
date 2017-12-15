@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.util.ArrayList;
 
 import me.andrepaulo.bookmanager.R;
@@ -19,9 +22,11 @@ public class GrelhaLivrosAdapter extends BaseAdapter {
 
     private ArrayList<Livro> listaLivros;
     private LayoutInflater inflater;
+    private Context context;
 
     public GrelhaLivrosAdapter(Context contexto, ArrayList<Livro> livros) {
         this.listaLivros = livros;
+        this.context = contexto;
         this.inflater = LayoutInflater.from(contexto);
     }
 
@@ -47,7 +52,12 @@ public class GrelhaLivrosAdapter extends BaseAdapter {
         }
         ImageView imageViewCapaLivro = (ImageView) convertView.findViewById(R.id.imageViewCapaLivro);
         System.out.print(position);
-        imageViewCapaLivro.setImageResource(listaLivros.get(position).getCapa());
+        Glide.with(context)
+                .load(listaLivros.get(position).getCapa())
+                .placeholder(R.drawable.ipl_semfundo)
+                .thumbnail(0f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageViewCapaLivro);
 
         return convertView;
     }

@@ -2,6 +2,9 @@ package me.andrepaulo.bookmanager.modelo;
 
 import android.content.Context;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 import java.util.ArrayList;
 
 import me.andrepaulo.bookmanager.R;
@@ -12,13 +15,17 @@ import me.andrepaulo.bookmanager.R;
 
 public class SingletonLivros {
     private static SingletonLivros INSTANCE = null;
+    private String mUrlAPILivros = "http://amsi201718.ddns.net/api/livros";
     private LivroBDHelper livroBDHelper;
+
+    private static RequestQueue volleyQueue = null;
 
     private ArrayList<Livro> livros;
 
     public static synchronized SingletonLivros getInstance(Context context) {
         if(INSTANCE == null){
             INSTANCE = new SingletonLivros(context);
+            volleyQueue = Volley.newRequestQueue(context);
         }
         return INSTANCE;
     }
@@ -26,25 +33,20 @@ public class SingletonLivros {
     private SingletonLivros(Context context) {
         this.livros = new ArrayList<>();
         this.livroBDHelper = new LivroBDHelper(context);
-        gerarFakeData();
     }
 
-    public ArrayList<Livro> getLivros(){
+    public ArrayList<Livro> getLivrosBD(){
         return livros = livroBDHelper.getAllLivros();
     }
 
-    private void gerarFakeData(){
-        adicionar(new Livro("Programar em Android AMSI", "Android Saga", "Equipa de AMSI", 2017, R.drawable.programarandroid1));
-        adicionar(new Livro("Programar em Android AMSI", "2º Temporada", "AMSI TEAM", 2017, R.drawable.programarandroid2));
-        adicionar(new Livro("Origem", "1º Temporada", "Dan Brown", 2017, R.drawable.origem));
-        adicionar(new Livro("Sinal de Vida", "1º Temporada", "José Rodrigues dos Santos", 2017, R.drawable.sinaldevida));
-        adicionar(new Livro("O Gigante Enterrado", "1º Temporada", "Kazuo Ishiguro", 2017, R.drawable.ogiganteenterrado));
-        adicionar(new Livro("Astérix e a Transitálica", "Volume 37", "Jean-Yves", 2017, R.drawable.asterixeatransitalica));
-        adicionar(new Livro("O Regresso da Primavera", "1º Temporada", "Sveva Casati Modignani", 2017, R.drawable.oregressodaprimavera));
-
+    public void adicionarLivrosBD(ArrayList<Livro> listaLivros){
+        livroBDHelper.removerAllLivrosBD();
+        for (Livro livro : listaLivros){
+            adicionarLivroDB(livro);
+        }
     }
 
-    public void adicionar(Livro livro){
+    public void adicionarLivroDB(Livro livro){
         Livro tempLivro = livroBDHelper.adicionarLivroBD(livro);
         if(tempLivro != null){
             this.livros.add(livro);
@@ -54,7 +56,7 @@ public class SingletonLivros {
     }
 
 
-    public void removerLivro(int posicao){
+    public void removerLivroBD(int posicao){
         if(livros.get(posicao) != null){
             if(livroBDHelper.removerLivroBD(livros.get(posicao).getId())){
                 livros.remove(posicao);
@@ -65,7 +67,7 @@ public class SingletonLivros {
         }
     }
 
-    public void editarLivro(Livro livro){
+    public void editarLivroBD(Livro livro){
         if(livros.contains(livro)){
             int posicao = pesquisarLivro(livro.getId());
             Livro tLivro = livros.get(posicao);

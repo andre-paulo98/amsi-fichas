@@ -43,7 +43,7 @@ public class LivroBDHelper extends SQLiteOpenHelper {
                 LIVRO_SERIE + " TEXT NOT NULL, " +
                 LIVRO_AUTOR + " TEXT NOT NULL, " +
                 LIVRO_ANO + " INTEGER NOT NULL, " +
-                LIVRO_CAPA + " INTEGER" +
+                LIVRO_CAPA + " TEXT " +
                 ");";
         db.execSQL(createLivroTable);
 
@@ -91,22 +91,26 @@ public class LivroBDHelper extends SQLiteOpenHelper {
 
     public ArrayList<Livro> getAllLivros(){
         ArrayList<Livro> livros = new ArrayList<>();
-        Cursor cursor = this.database.rawQuery("SELECT * FROM "+ TABLE_NAME, null);
+        Cursor cursor = this.database.query(TABLE_NAME, new String[]{LIVRO_ID, LIVRO_TITULO, LIVRO_SERIE, LIVRO_AUTOR, LIVRO_ANO, LIVRO_CAPA}, null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
                 Livro tempLivro = new Livro(
+                    cursor.getLong(0),
                     cursor.getString(1),
                     cursor.getString(2),
                     cursor.getString(3),
                     cursor.getInt(4),
-                    cursor.getInt(5)
+                    cursor.getString(5)
                 );
-                tempLivro.setId(cursor.getLong(0));
                 livros.add(tempLivro);
 
             } while (cursor.moveToNext());
         }
 
         return livros;
+    }
+
+    public void removerAllLivrosBD() {
+        this.database.delete(TABLE_NAME, null, null);
     }
 }
