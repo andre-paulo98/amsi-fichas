@@ -2,23 +2,43 @@ package me.andrepaulo.bookmanager.modelo;
 
 import android.content.Context;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import me.andrepaulo.bookmanager.ActivityDadosDinamicos;
 import me.andrepaulo.bookmanager.R;
+import me.andrepaulo.bookmanager.listeners.LivrosListener;
+import me.andrepaulo.bookmanager.utils.LivroJsonParser;
 
 /**
  * Created by andre on 27/11/2017.
  */
 
-public class SingletonLivros {
+public class SingletonLivros implements LivrosListener{
+    private static final int ADICIONAR_BD = 1;
+    private static final int EDITAR_BD = 2;
+    private static final int REMOVER_BD = 3;
     private static SingletonLivros INSTANCE = null;
     private String mUrlAPILivros = "http://amsi201718.ddns.net/api/livros";
+    private String mUrlAPILogin = "http://amsi201718.ddns.net/api/auth/login";
+    private String tokenAPI = "";
     private LivroBDHelper livroBDHelper;
 
     private static RequestQueue volleyQueue = null;
+
+    private LivrosListener livrosListener;
 
     private ArrayList<Livro> livros;
 
@@ -36,7 +56,7 @@ public class SingletonLivros {
     }
 
     public ArrayList<Livro> getLivrosBD(){
-        return livros = livroBDHelper.getAllLivros();
+        return livroBDHelper.getAllLivros();
     }
 
     public void adicionarLivrosBD(ArrayList<Livro> listaLivros){
@@ -47,38 +67,20 @@ public class SingletonLivros {
     }
 
     public void adicionarLivroDB(Livro livro){
-        Livro tempLivro = livroBDHelper.adicionarLivroBD(livro);
-        if(tempLivro != null){
-            this.livros.add(livro);
-        } else {
-            System.out.println(">>> [ERRO] O livro com o nome: "+livro.getTitulo() + " não foi adicionado. <<<");
-        }
+        livroBDHelper.adicionarLivroBD(livro);
+    }
+
+    public Livro getLivro(long id){
+        return livroBDHelper.getLivroBD(id);
     }
 
 
-    public void removerLivroBD(int posicao){
-        if(livros.get(posicao) != null){
-            if(livroBDHelper.removerLivroBD(livros.get(posicao).getId())){
-                livros.remove(posicao);
-            } else {
-                System.out.println(">>> [ERRO] o livro não foi removido <<<");
-            }
-
-        }
+    public void removerLivroBD(long id){
+        livroBDHelper.removerLivroBD(id);
     }
 
     public void editarLivroBD(Livro livro){
-        if(livros.contains(livro)){
-            int posicao = pesquisarLivro(livro.getId());
-            Livro tLivro = livros.get(posicao);
-            tLivro.setTitulo(livro.getTitulo());
-            tLivro.setAutor(livro.getAutor());
-            tLivro.setAno(livro.getAno());
-            tLivro.setSerie(livro.getSerie());
-            if(livroBDHelper.atualizarLivroBD(tLivro)){
-                System.out.println("Livro guardado na base de dados com sucesso.");
-            }
-        }
+        livroBDHelper.atualizarLivroBD(livro);
     }
 
     public int pesquisarLivro(long idLivro){
@@ -89,4 +91,88 @@ public class SingletonLivros {
         }
         return -1;
     }
+
+    @Override
+    public void onRefreshListaLivros(ArrayList<Livro> livros) {
+
+    }
+
+    @Override
+    public void onUpdateListaLivrosBD(Livro livro, int operacao) {
+        switch (operacao){
+            case 1:
+                adicionarLivroDB(livro);
+                break;
+            case 2:
+                editarLivroBD(livro);
+                break;
+            case 3:
+                removerLivroBD(livro.getId());
+                break;
+        }
+    }
+
+    public void setLivrosListener(LivrosListener livrosListener) {
+        this.livrosListener = livrosListener;
+    }
+
+    // API
+
+    public void getAllLivrosAPI(final Context context, boolean isConnected) {
+        if(!isConnected){
+            livros = livroBDHelper.getAllLivros();
+            if(livrosListener != null){
+                livrosListener.onRefreshListaLivros(livros);
+            }
+        } else {
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPILivros, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    livros = LivroJsonParser.parserJsonLivros(response, context);
+                    adicionarLivrosBD(livros);
+                    if(livrosListener != null){
+                        livrosListener.onRefreshListaLivros(livros);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    System.out.println(" -->> ERRO GETALLLIVROSAPI <<-- \n\n\n\n"+error.getMessage());
+                }
+            });
+            volleyQueue.add(request);
+        }
+
+    }
+
+    public void adicionarLivroAPI(final Livro livro, final Context context){
+        StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILivros, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                System.out.println("--> REPOSTA ADD POST "+response);
+                if(livrosListener != null){
+                    livrosListener.onUpdateListaLivrosBD(LivroJsonParser.parserJsonLivros(response, context), ADICIONAR_BD);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(" -->> ERRO ACIDIONARLIVROAPI <<-- \n\n\n\n"+error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", tokenAPI);
+                params.put("titulo", livro.getTitulo());
+                params.put("autor", livro.getAutor());
+                params.put("serie", livro.getSerie());
+                params.put("ano", livro.getAno()+"");
+                params.put("capa", livro.getCapa());
+                return params;
+            }
+        };
+        volleyQueue.add(request);
+    }
+
 }

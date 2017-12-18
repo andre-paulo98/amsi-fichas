@@ -22,7 +22,8 @@ public class DetalheLivro extends AppCompatActivity {
     private EditText tx_titulo, tx_serie, tx_autor, tx_ano;
     private long idLivro;
     private int posicao;
-    private ArrayList<Livro> livros;
+    private Livro livro;
+    //private ArrayList<Livro> livros;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +36,17 @@ public class DetalheLivro extends AppCompatActivity {
         tx_ano = (EditText) findViewById(R.id.editAno);
         fab = (FloatingActionButton) findViewById(R.id.fabDetalheLivro);
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-        livros = SingletonLivros.getInstance(getApplicationContext()).getLivrosBD();
+        //livros = SingletonLivros.getInstance(getApplicationContext()).getLivrosBD();
+        livro = SingletonLivros.getInstance(this).getLivro(idLivro);
 
         if(idLivro > -1){
             fab.setImageResource(R.drawable.ic_actions_save);
             posicao = SingletonLivros.getInstance(getApplicationContext()).pesquisarLivro(idLivro);
-
-
-            Livro livroSelecionado = livros.get(posicao);
-            tx_titulo.setText(livroSelecionado.getTitulo());
-            tx_serie.setText(livroSelecionado.getSerie());
-            tx_autor.setText(livroSelecionado.getAutor());
-            tx_ano.setText(livroSelecionado.getAno()+"");
-            setTitle(getString(R.string.detalhes)+livroSelecionado.getTitulo()+"\"");
+            tx_titulo.setText(livro.getTitulo());
+            tx_serie.setText(livro.getSerie());
+            tx_autor.setText(livro.getAutor());
+            tx_ano.setText(livro.getAno()+"");
+            setTitle(getString(R.string.detalhes)+livro.getTitulo()+"\"");
             /*Glide.with(getApplicationContext())
                     .load(livroSelecionado.getCapa())
                     .placeholder(R.drawable.ipl_semfundo)
@@ -65,7 +64,7 @@ public class DetalheLivro extends AppCompatActivity {
         if(idLivro > -1){
 
         } else {
-            Livro tempLivro = livros.get(posicao);
+            Livro tempLivro = livro;
             tempLivro.setTitulo(tx_titulo.getText().toString());
             tempLivro.setSerie(tx_serie.getText().toString());
             tempLivro.setAutor(tx_autor.getText().toString());

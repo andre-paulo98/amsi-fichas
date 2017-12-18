@@ -15,17 +15,20 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import me.andrepaulo.bookmanager.listeners.LivrosListener;
 import me.andrepaulo.bookmanager.modelo.ListaLivrosAdapter;
 import me.andrepaulo.bookmanager.modelo.Livro;
 import me.andrepaulo.bookmanager.modelo.SingletonLivros;
+import me.andrepaulo.bookmanager.utils.LivroJsonParser;
 
-public class ActivityDadosDinamicos extends AppCompatActivity {
+public class ActivityDadosDinamicos extends AppCompatActivity implements LivrosListener{
 
     private String mEmail;
 
     private ListView listaLivros;
     private ListaLivrosAdapter listaLivrosAdapter;
-    private ArrayList<Livro> livros;
+    //private ArrayList<Livro> livros;
+    private Livro livro;
 
 
     @Override
@@ -36,7 +39,6 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
         mEmail = getIntent().getStringExtra(LoginActivity.DADOS_EMAIL);
 
         livros = SingletonLivros.getInstance(getApplicationContext()).getLivrosBD();
-
         listaLivrosAdapter = new ListaLivrosAdapter(this, livros);
 
         listaLivros = (ListView) findViewById(R.id.listaLivros);
@@ -46,11 +48,15 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DetalheLivro.class);
-                Livro tempLivro = livros.get(position);
+                Livro tempLivro = (Livro) parent.getItemAtPosition(position);
                 intent.putExtra(DetalheLivro.LIVRO_SELECIONADO, tempLivro.getId());
                 startActivity(intent);
             }
         });
+
+        // Registar o Listener
+        SingletonLivros.getInstance(this).setLivrosListener(this);
+        SingletonLivros.getInstance(this).getAllLivrosAPI(this, LivroJsonParser.isConnectionInternet(this));
 
     }
 
@@ -85,7 +91,7 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 final ArrayList<Livro> tempLivros = new ArrayList<Livro>();
-                for (Livro temp : livros){
+                for (Livro temp : SingletonLivros.getInstance(getApplicationContext()).getLivrosBD()){
                     if(temp.getTitulo().toLowerCase().contains(newText.toString()))
                         tempLivros.add(temp);
                 }
@@ -126,10 +132,19 @@ public class ActivityDadosDinamicos extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
-        livros.clear();
-        livros = SingletonLivros.getInstance(this).getLivrosBD();
+        SingletonLivros.getInstance(this).getAllLivrosAPI(this, LivroJsonParser.isConnectionInternet(this));
+
+    }
+
+    @Override
+    public void onRefreshListaLivros(ArrayList<Livro> livros) {
+        listaLivrosAdapter = new ListaLivrosAdapter(this, livros);
+        listaLivros.setAdapter(listaLivrosAdapter);
         listaLivrosAdapter.refresh(livros);
+    }
+
+    @Override
+    public void onUpdateListaLivrosBD(Livro livro, int operacao) {
 
     }
 }

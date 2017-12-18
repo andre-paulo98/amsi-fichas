@@ -113,4 +113,20 @@ public class LivroBDHelper extends SQLiteOpenHelper {
     public void removerAllLivrosBD() {
         this.database.delete(TABLE_NAME, null, null);
     }
+
+    public Livro getLivroBD(long id) {
+        Livro tLivro = null;
+        Cursor cursor = this.database.query(TABLE_NAME, new String[]{LIVRO_ID, LIVRO_TITULO, LIVRO_SERIE, LIVRO_AUTOR, LIVRO_ANO, LIVRO_CAPA}, "id = ? ", new String[]{""+id}, null, null,null);
+        if(cursor.moveToFirst()){
+            tLivro = new Livro(
+                    cursor.getLong(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getInt(4),
+                    cursor.getString(5)
+            );
+        }
+        return tLivro;
+    }
 }
