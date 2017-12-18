@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -169,6 +170,32 @@ public class SingletonLivros implements LivrosListener{
                 params.put("serie", livro.getSerie());
                 params.put("ano", livro.getAno()+"");
                 params.put("capa", livro.getCapa());
+                return params;
+            }
+        };
+        volleyQueue.add(request);
+    }
+
+
+    public void loginAPI(final String email, final String password, final Context context){
+        StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                tokenAPI = LivroJsonParser.parserJsonLogin(response, context);
+                System.out.println("--> LOGIN TOKEN: "+tokenAPI);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("LOGIN :: ERRO: "+error.getMessage());
+            }
+        }
+        ){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("email", email);
+                params.put("password", password);
                 return params;
             }
         };
